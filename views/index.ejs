@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Notes</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/vendor.css">
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- script
+    ================================================== -->
+    <script src="/js/modernizr.js"></script>
+    <script src="/js/pace.min.js"></script>
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+
+</head>
+
+<body id="top">
+
+    <!-- pageheader
+    ================================================== -->
+    <section class="s-pageheader s-pageheader--home">
+
+        <header class="header">
+            <div class="header__content row">
+
+                <div class="header__logo">
+                    <a class="logo" href="index.html">
+                        <img src="images/logo.svg" alt="Homepage">
+                    </a>
+                </div> <!-- end header__logo -->
+
+
+                <a class="header__search-trigger" href="#0"></a>
+
+                <div class="header__search">
+
+                    <form role="search" method="get" class="header__search-form" action="#">
+                        <label>
+                            <span class="hide-content">Search for:</span>
+                            <input type="search" class="search-field" placeholder="Type Keywords" value="" name="s" title="Search for:" autocomplete="off">
+                        </label>
+                        <input type="submit" class="search-submit" value="Search">
+                    </form>
+
+                    <a href="#0" title="Close Search" class="header__overlay-close">Close</a>
+
+                </div>  <!-- end header__search -->
+
+                <br/>
+                <br/>
+
+                <form id="commentForm" action="">
+                  <textarea id="newnote" placeholder="New Note" cols="60" rows="20" style="border: 2px solid white; border-radius: 10px; padding: 10px; margin: 0 auto;"></textarea><br>
+                </form>
+
+                <button id="postComment">Post Note</button>
+
+              <br/>
+              <br/>
+
+            </div> <!-- header-content -->
+        </header> <!-- header -->
+
+
+    </section> <!-- end s-pageheader -->
+
+
+    <!-- s-content
+    ================================================== -->
+    <section class="s-content">
+
+
+
+
+
+
+
+
+        <div class="row masonry-wrap">
+            <div class="masonry">
+
+                <div class="grid-sizer"></div>
+
+                <div id="notes"></div>
+
+
+
+            </div> <!-- end masonry -->
+        </div> <!-- end masonry-wrap -->
+
+
+    </section> <!-- s-content -->
+
+
+
+
+    <!-- s-footer
+    ================================================== -->
+    <footer class="s-footer">
+
+
+
+    </footer> <!-- end s-footer -->
+
+
+    <!-- preloader
+    ================================================== -->
+    <div id="preloader">
+        <div id="loader">
+            <div class="line-scale">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+
+    $("#postComment").click(function(){
+          var myobj = {note:$("#newnote").val()};
+          jobj = JSON.stringify(myobj);
+          var url = "/authentication/notes";
+          $.ajax({
+          url:url,
+          type: "POST",
+          data: jobj,
+          contentType: "application/json; charset=utf-8",
+          success: function(data,textStatus) {
+              getComments();
+          }
+          });
+      });
+
+
+
+      $("#getComments").click(function() {
+        $.getJSON('/authentication/notes', function(data) {
+          console.log(data);
+          var everything = "";
+          for(var comment in data) {
+            com = data[comment];
+            everything += "<article class='masonry__brick entry format-quote' data-aos='fade-up'><div class='entry__thumb'><blockquote><p>"+com.note+"</p></blockquote></div></article>";
+          }
+
+          $("#notes").html(everything);
+        })
+        });
+
+
+
+
+    function getComments(){
+      $.getJSON('/authentication/notes', function(data) {
+        console.log(data);
+        var everything = "";
+        for(var comment in data) {
+          com = data[comment];
+          everything += "<article class='masonry__brick entry format-quote' data-aos='fade-up'><div class='entry__thumb'><blockquote><p>"+com.note+"</p></blockquote></div></article>";
+        }
+
+        $("#notes").html(everything);
+      })
+    }
+
+    getComments();
+
+
+    </script>
+
+</body>
+
+</html>
